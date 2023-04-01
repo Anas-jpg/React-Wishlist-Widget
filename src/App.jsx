@@ -1,26 +1,45 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import ListGroup from "react-bootstrap/ListGroup";
+import Alert from 'react-bootstrap/Alert';
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const App = () => {
   // use state
   const [activity, setActivity] = useState("");
   const [priority, setPriority] = useState(1);
   const [listData, setListData] = useState([]);
+  const [error, setError] = useState(false);
+  const [success, setsuccess] = useState(false);
+
+
 
   function addActivity() {
-    // ab do values ko ikatha add karna hai na issi liye
+    if (!activity.trim()) {
+      setError(true);
+      setsuccess(false);
+      return;
+    }
+
+    setError(false);
+    setsuccess(true);
+
+    
+
+  
     const newActivity = {
       name: activity,
       priority: priority,
     };
-
+  
     setListData((listData) => [...listData, newActivity]);
     setActivity("");
-    setPriority(1);
+    setPriority(0);
   }
+  
 
   function removeActivity(i) {
     const updatedListData = listData.filter((ele, id) => {
@@ -45,7 +64,7 @@ const App = () => {
   return (
     <>
             <div className="container">
-            <h2 className="font-weight-bold">TODO LIST</h2>
+            <h2 className="font-weight-bold">Wishlist Widget</h2>
         <div className="d-flex justify-content-center" >
           <Form.Group controlId="activity" style={{ marginTop: '10px'}} >
             <Form.Control type="text" placeholder="Add Activity"  value={activity} onChange={(e) => setActivity(e.target.value)} />
@@ -60,9 +79,23 @@ const App = () => {
           <Button variant="primary" onClick={addActivity} style={{ margin: '10px'}} >ADD</Button>
         </div>
 
+        {error && (
+          <Alert variant="danger">
+            Error: Nothing in the bucket to Add
+          </Alert>
+        )}
 
+        <div>
 
-        <p className="list-heading">Here is your List :)</p>
+        {success && (
+                <Alert variant="success">
+                  Succcess: The Bucket is Added
+                </Alert>
+              )}
+
+        </div>
+
+        <p className="list-heading">Items in the List :)</p>
         {listData !== [] &&
           listData.map((data, i) => {
             return (
